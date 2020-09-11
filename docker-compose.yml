@@ -1,0 +1,28 @@
+version: '2.3'
+services:
+  training:
+    image: pytorch/pytorch:1.5.1-cuda10.1-cudnn7-runtime
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=0,1,2,3
+    user: "2004:2004"
+    container_name: "moono_gpu_0123"
+    volumes:
+      - "/mnt/vision-nas/moono/git-repos/moco:/work-dir"
+      - "/mnt/vision-nas/data-sets/cross_domain_faces:/dataset-dir:ro"
+    working_dir: "/work-dir"
+    command: ["python", "-u", "main_moco.py",
+              "-a", "resnet50",
+              "--lr", "0.015",
+              "--batch-size", "128",
+              "--dist-url", "'tcp://localhost:10001'",
+              "--multiprocessing-distributed",
+              "--world-size", "1"
+              "--rank", "0",
+              "--mlp", "1",
+              "--moco-k", "65536",
+              "--moco-t", "0.2",
+              "--aug-face",
+              "--cos",
+              "/dataset-dir"
+    ]

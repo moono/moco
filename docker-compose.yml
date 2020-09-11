@@ -11,18 +11,4 @@ services:
       - "/mnt/vision-nas/moono/git-repos/moco:/work-dir"
       - "/mnt/vision-nas/data-sets/cross_domain_faces:/dataset-dir:ro"
     working_dir: "/work-dir"
-    command: ["python", "-u", "main_moco.py",
-              "--data", "/dataset-dir",
-              "--arch", "resnet50",
-              "--lr", "0.015",
-              "--batch-size", "128",
-              "--dist-url", "'tcp://localhost:10001'",
-              "--multiprocessing-distributed",
-              "--world-size", "1",
-              "--rank", "0",
-              "--mlp", "1",
-              "--moco-k", "65536",
-              "--moco-t", "0.2",
-              "--aug-face",
-              "--cos"
-    ]
+    command: ["python", "run_script.py"]

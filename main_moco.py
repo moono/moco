@@ -97,6 +97,10 @@ parser.add_argument('--aug-plus', action='store_true',
 parser.add_argument('--cos', action='store_true',
                     help='use cosine lr schedule')
 
+# options for moco on face datasets
+parser.add_argument('--aug-face', action='store_true',
+                    help='use moco face data augmentation')
+
 
 def main():
     args = parser.parse_args()
@@ -217,10 +221,23 @@ def main_worker(gpu, ngpus_per_node, args):
     cudnn.benchmark = True
 
     # Data loading code
-    traindir = os.path.join(args.data, 'train')
+    traindir = os.path.join(args.data, 'images')
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])
-    if args.aug_plus:
+    if args.aug_face:
+        # for face datasets
+        augmentation = [
+            transforms.RandomResizedCrop(224, scale=(0.7, 1.)),
+            transforms.RandomApply([
+                transforms.ColorJitter(0.1, 0.1, 0.1, 0.1)
+            ], p=0.8),
+            transforms.RandomGrayscale(p=0.2),
+            transforms.RandomApply([moco.loader.GaussianBlur([.1, 2.])], p=0.5),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            normalize
+        ]
+    elif args.aug_plus:
         # MoCo v2's aug: similar to SimCLR https://arxiv.org/abs/2002.05709
         augmentation = [
             transforms.RandomResizedCrop(224, scale=(0.2, 1.)),

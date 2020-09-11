@@ -12,7 +12,8 @@ services:
       - "/mnt/vision-nas/data-sets/cross_domain_faces:/dataset-dir:ro"
     working_dir: "/work-dir"
     command: ["python", "-u", "main_moco.py",
-              "-a", "resnet50",
+              "--data", "/dataset-dir",
+              "--arch", "resnet50",
               "--lr", "0.015",
               "--batch-size", "128",
               "--dist-url", "'tcp://localhost:10001'",
@@ -23,6 +24,5 @@ services:
               "--moco-k", "65536",
               "--moco-t", "0.2",
               "--aug-face",
-              "--cos",
-              "/dataset-dir"
+              "--cos"
     ]

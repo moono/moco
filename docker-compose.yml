@@ -10,6 +10,7 @@ services:
     volumes:
       - "/mnt/vision-nas/moono/git-repos/moco:/work-dir"
       - "/mnt/vision-nas/data-sets/cross_domain_faces:/dataset-dir:ro"
+    shm_size: "128gb"
     working_dir: "/work-dir"
     command: [ "python", "-u", "main_moco.py",
                "--arch", "resnet50",

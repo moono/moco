@@ -23,7 +23,7 @@ services:
                "--world-size", "1",
                "--rank", "0",
                "--mlp",
-               "--moco-k", "65536",
+               "--moco-k", "32768",
                "--moco-t", "0.2",
                "--cos",
     ]

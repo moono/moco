@@ -4,15 +4,17 @@ services:
     image: pytorch/pytorch:1.5.1-cuda10.1-cudnn7-runtime
     runtime: nvidia
     environment:
-      - NVIDIA_VISIBLE_DEVICES=2,3,4,5
+      - NVIDIA_VISIBLE_DEVICES=4,5,6,7
     user: "2004:2004"
-    container_name: "moono_gpu_2345"
+    container_name: "moono_gpu_4567"
     volumes:
       - "/mnt/vision-nas/moono/git-repos/moco:/work-dir"
-      - "/mnt/vision-nas/data-sets/cross_domain_faces:/dataset-dir:ro"
+      - "/mnt/vision-nas/data-sets/A2Face:/dataset-base-dir:ro"
     shm_size: "128gb"
     working_dir: "/work-dir"
-    command: [ "python", "-u", "main_moco.py",
+    command: [ "python", "-u", "main_moco_custom.py",
+               "--data_a", "/dataset-base-dir/customize_data_v9_55000_openface_aligned/normalized",
+               "--data_b", "/dataset-base-dir/customize_data_v9_55000_config/customize_data_v9_55000_512x512",
                "--arch", "resnet50",
                "--lr", "0.015",
                "--batch-size", "128",
@@ -23,7 +25,5 @@ services:
                "--mlp",
                "--moco-k", "65536",
                "--moco-t", "0.2",
-               "--aug-face",
                "--cos",
-               "/dataset-dir"
     ]
